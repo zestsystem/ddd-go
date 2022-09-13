@@ -10,11 +10,10 @@ import (
 
 var (
 	// ErrInvalidPErson is returned when the person is not valid in the NewCustomer factory
-	ErrInvalidPerson = errors.New("A customer has to have a valid person")
+	ErrInvalidPerson = errors.New("a customer has to have a valid person")
 )
 
 // Customer is an aggregate that combines all entities needed to represent a customer
-
 type Customer struct {
 	// person is the root entity of a customer
 	// which means the person.ID is the main identifier for this aggregate
@@ -30,7 +29,6 @@ type Customer struct {
 
 // NewCustomer is a factory to create a new Customer aggregate
 // It will validate that the name is not empty
-
 func NewCustomer(name string) (Customer, error) {
 	// Validate that the Name is not empty
 
@@ -50,4 +48,31 @@ func NewCustomer(name string) (Customer, error) {
 		products:     make([]*entity.Item, 0),
 		transactions: make([]valueobject.Transaction, 0),
 	}, nil
+}
+
+// GetID returns the customers root entity ID
+func (c *Customer) GetID() uuid.UUID {
+	return c.person.ID
+}
+
+// SetID sets the root ID
+func (c *Customer) SetID(id uuid.UUID) {
+	if c.person == nil {
+		c.person = &entity.Person{}
+	}
+
+	c.person.ID = id
+}
+
+// SetName changes the name of the Customer
+func (c *Customer) SetName(name string) {
+	if c.person == nil {
+		c.person = &entity.Person{}
+	}
+	c.person.Name = name
+}
+
+// SetName changes the name of the Customer
+func (c *Customer) GetName() string {
+	return c.person.Name
 }
